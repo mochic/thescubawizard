@@ -1,8 +1,8 @@
-// import React from 'react'
+import React from 'react'
 
 // import navigate from 'gatsby'
 // import posed, { PoseGroup } from 'react-pose'
-// import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 
 // import Logo from './src/components/Logo'
 // import BackgroundImage from './src/components/BackgroundImage'
@@ -14,16 +14,16 @@
 //   },
 // }
 
-// const GlobalStyle = createGlobalStyle`
-//     html, body {
-//         height: 100%;
-//         width: 100%;
-//     }
-//     body {
-//         margin: 0;
-//         padding: 0;
-//     }
-// `
+const GlobalStyle = createGlobalStyle`
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+    }
+`
 // // const LogoContainer = styled.div`
 // //   height: 50%;
 // //   width: 50%;
@@ -95,21 +95,9 @@
 //   exit: { opacity: 0 },
 // })
 
-// export const replaceComponentRenderer = ({ props, ...other }) => (
-//   <>
-//     <GlobalStyle />
-//     <ThemeProvider theme={DarkTheme}>
-//       <PoseGroup>
-//         <Transition key={props.location.key}>
-//           <Background />
-//           <BrowserContainer>
-//             <PageContainer>
-//               {React.createElement(props.pageResources.component, props)}
-//             </PageContainer>
-//             <Navigation />
-//           </BrowserContainer>
-//         </Transition>
-//       </PoseGroup>
-//     </ThemeProvider>
-//   </>
-// )
+export const replaceComponentRenderer = ({ props, ...other }) => (
+  <>
+    <GlobalStyle />
+    {React.createElement(props.pageResources.component, props)}
+  </>
+)

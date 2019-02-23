@@ -1,0 +1,3 @@
+- uses react hooks, async rendering
+- single page navigation
+- literally all the new stuff

@@ -4,6 +4,8 @@ import React from 'react'
 // import posed, { PoseGroup } from 'react-pose'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 
+import Logo from './src/components/AlternateLogo'
+
 // import Logo from './src/components/Logo'
 // import BackgroundImage from './src/components/BackgroundImage'
 // import Navigation, { NavigationContainer } from './src/components/Navigation'
@@ -16,8 +18,7 @@ import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
     html, body {
-        height: 100%;
-        width: 100%;
+        background: #343434;
     }
     body {
         margin: 0;
@@ -95,9 +96,21 @@ const GlobalStyle = createGlobalStyle`
 //   exit: { opacity: 0 },
 // })
 
+const LogoContainer = styled.div`
+  height: 170%;
+  width: 170%;
+  position: fixed;
+  margin-left: 22.2%;
+  margin-top: 22%;
+  z-index: -1;
+`
+
 export const replaceComponentRenderer = ({ props, ...other }) => (
   <>
     <GlobalStyle />
+    <LogoContainer>
+      <Logo />
+    </LogoContainer>
     {React.createElement(props.pageResources.component, props)}
   </>
 )

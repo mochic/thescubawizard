@@ -7,6 +7,8 @@ const AboutContainer = styled.div``
 
 const AboutNashLapping = styled.p``
 
+const Salutation = styled.div``
+
 export default () => (
   <AboutContainer>
     <Title>about</Title>

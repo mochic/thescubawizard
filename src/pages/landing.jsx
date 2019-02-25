@@ -1,6 +1,9 @@
 import React, { Component, Suspense } from 'react'
 
 import styled from 'styled-components'
+import { animated, useTransition } from 'react-spring'
+
+const LandingContainer = styled.div``
 
 const Landing = React.lazy(() => import('../components/Landing'))
 
@@ -10,9 +13,10 @@ const LandingLoadingTitle = styled.h1`
   font-size: 48px;
   color: white;
   font-family: 'roboto';
+  overflow: hidden;
 `
 
-const LandingLoadingContainer = styled.div`
+const LandingLoadingContainer = styled(animated.div)`
   background: #343434;
 `
 
@@ -27,9 +31,17 @@ const LandingLoading = () => {
 export default class PageComponent extends Component {
   render = () => {
     return (
-      <Suspense fallback={LandingLoading}>
-        <Landing />
+      <Suspense fallback={<div>loading...</div>}>
+        <LandingContainer>
+          <Landing />
+        </LandingContainer>
       </Suspense>
     )
   }
 }
+// suspense is buggy with hmr?
+// export default class PageComponent extends Component {
+//   render = () => {
+//     return <Landing />
+//   }
+// }

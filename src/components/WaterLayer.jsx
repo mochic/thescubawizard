@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 
 import styled from 'styled-components'
 
-import WaterSVG from '../images/water-darker.svg'
+import WaterSVG from '../images/water-darker-longer.svg'
 
 const CoverImage = styled.img`
-  height: 860px;
-  width: 100vh;
+  height: 1179px;
+  width: 1370px;
   object-fit: cover;
   margin: 0;
   padding: 0;

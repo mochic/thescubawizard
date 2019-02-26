@@ -108,9 +108,9 @@ const LogoContainer = styled.div`
 export const replaceComponentRenderer = ({ props, ...other }) => (
   <>
     <GlobalStyle />
-    <LogoContainer>
+    {/* <LogoContainer>
       <Logo />
-    </LogoContainer>
+    </LogoContainer> */}
     {React.createElement(props.pageResources.component, props)}
   </>
 )

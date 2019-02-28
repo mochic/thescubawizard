@@ -2,12 +2,13 @@ import React, { Component, useState } from 'react'
 
 import styled, { keyframes } from 'styled-components'
 import { animated, config, useSpring } from 'react-spring'
+import { useGesture } from 'react-with-gesture'
 
 import WaterLayer from '../components/WaterLayer'
 
 import Logo from '../components/AlternateLogo'
 
-import Water from '../images/water-darker-longer.svg'
+import Water from '../images/long-wave.svg'
 
 // icon is -1 zindex
 // background is -2 zindex
@@ -98,7 +99,7 @@ import Water from '../images/water-darker-longer.svg'
 const TestWave = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg'
 
 const WaterDiv = styled.div`
-  background: url(${TestWave}) repeat-x;
+  background: url(${Water}) repeat-x;
   height: 1179px;
   width: 6000px;
   transform: translate3d(0, 0, 0);
@@ -115,7 +116,7 @@ const Wave = keyframes`
 
 const Swell = keyframes`
   0%, 100% {
-    transform: translate3d(0,-25px,0);
+    transform: translate3d(0,-16px,0);
   }
   50% {
     transform: translate3d(0,5px,0);
@@ -125,17 +126,38 @@ const Swell = keyframes`
 const WaterForegroundContainer = styled(animated.div)`
   z-index: 0;
   position: absolute;
-  animation: ${Wave} 14s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite,
-    ${Swell} 7s ease -1.25s infinite;
+  animation: ${Wave} 43s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite,
+    ${Swell} 23s ease -1.25s infinite;
   width: 1370px;
-  transform: translate3d(0, 0, 0);
+  left: -340px;
 `
 const WaterBackgroundContainer = styled(animated.div)`
   z-index: -2;
   position: absolute;
-  left: -10%;
-  animation: ${Wave} 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+  width: 1370px;
+  animation: ${Wave} 43s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite,
+    ${Swell} 23s ease -1.25s infinite;
+  transform: translate3d(0, 0, 0);
+  left: -350px;
 `
+
+// const FloatingIcon = styled(animated.div)`
+//   animation: ${Swell} 23s ease -1.25s infinite;
+// `
+
+// const WaterForegroundContainer = styled(animated.div)`
+//   z-index: 0;
+//   position: absolute;
+//   width: 1370px;
+//   left: -80px;
+// `
+// const WaterBackgroundContainer = styled(animated.div)`
+//   z-index: -2;
+//   position: absolute;
+//   width: 1370px;
+//   transform: translate3d(0, 0, 0);
+//   left: -80px;
+// `
 
 // class AboutPage extends Component {
 //     constructor(props) {
@@ -161,11 +183,12 @@ const WaterBackgroundContainer = styled(animated.div)`
 // }
 
 const DivingLogo = styled(animated.div)`
-  height: 170%;
-  width: 170%;
+  height: 170vw;
+  width: 170vw;
   position: fixed;
-  margin-left: 22.2%;
+  margin-left: 20vw;
   z-index: -1;
+  animation: ${Swell} 14s ease -1.25s infinite;
 `
 
 const SceneContainer = styled(animated.div)``
@@ -174,17 +197,17 @@ const AboutPage = () => {
   const [dove, toggle] = useState(false)
   // assisted slide + other
   const foregroundProps = useSpring({
-    top: dove ? '-50%' : '70%',
+    top: dove ? '-50%' : '60%',
     config: config.molasses,
   })
 
   const backgroundProps = useSpring({
-    top: dove ? '-50%' : '50%',
+    top: dove ? '-50%' : '46%',
     config: config.molasses,
   })
 
   const logoProps = useSpring({
-    top: dove ? '10%' : '5%',
+    top: dove ? '7vh' : '6vh',
     config: config.wobbly,
   })
 

@@ -64,6 +64,24 @@ const WaterBackgroundContainer = styled(animated.div)`
   opacity: 0.8;
 `
 
+// const WaterForegroundContainer = styled(animated.div)`
+//   z-index: 0;
+//   position: absolute;
+//   width: 1370px;
+//   left: -350px;
+//   top: 70%;
+//   opacity: 0.8;
+// `
+
+// const WaterBackgroundContainer = styled(animated.div)`
+//   z-index: -2;
+//   position: absolute;
+//   width: 1370px;
+//   left: -350px;
+//   top: 46%;
+//   opacity: 0.8;
+// `
+
 // const WaterBackgroundContainer = styled(animated.div)`
 //   z-index: -2;
 //   position: absolute;
@@ -122,40 +140,69 @@ const ScrollerContainer = styled.div`
 
 const AboutPage = () => {
   const [dove, toggle] = useState(false)
-  // assisted slide + other
-  const foregroundProps = useSpring({
-    top: dove ? '5%' : '60%',
-    config: config.molasses,
-  })
 
-  const backgroundProps = useSpring({
-    top: dove ? '3%' : '46%',
-    config: config.molasses,
-  })
+  const foregroundFloat = 60
+  const foregroundDove = 5
 
-  const logoProps = useSpring({
-    top: dove ? '19%' : '18%',
-    config: config.wobbly,
-  })
+  const backgroundFloat = 46
+  const backgroundDove = 3
 
-  //   const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
-  //   // based on https://codesandbox.io/embed/r24mzvo3q
-  //   const bind = useGesture(({ down, delta, velocity }) => {
-  //     console.log('gesturing...', delta, velocity, down)
+  const logoFloat = 15
+  const logoDove = 24
 
-  //     if (down) {
-  //       set({
-  //         xy: [0, delta[1]],
-  //       }) // only move up y
-  //     }
+  //   const foregroundProps = useSpring({
+  //     top: dove ? '5%' : '60%',
+  //     config: config.molasses,
   //   })
+
+  //   const backgroundProps = useSpring({
+  //     top: dove ? '3%' : '46%',
+  //     config: config.molasses,
+  //   })
+
+  //   const logoProps = useSpring({
+  //     top: dove ? '19%' : '18%',
+  //     config: config.wobbly,
+  //   })
+
+  // const [{ offsetY }, set] = useSpring(() => ({ offsetY: 0 }))
+  // based on https://codesandbox.io/embed/r24mzvo3q
+  //   const bind = useGesture(({ local }) => {
+  //     console.log('gesturing...', local)
+  //     set({
+  //       offsetY: local[1], // y of drag?
+  //     })
+  //   })
+  const [
+    bind,
+    {
+      local: [x, y],
+    },
+  ] = useGesture()
+
+  // use interpolate to make it springy for the end animation?
+
+  const logoProps = {
+    top: `19%`,
+  }
+
+  //   const foregroundProps =
+  //     offsetY !== 0 ? { top: `60%` } : { transform: `translateY(${offsetY}px)` }
+
+  const foregroundProps = { top: `60%`, transform: `translateY(${y}px)` }
+
+  const backgroundProps = {
+    top: `46%`,
+    transform: `translateY(${y}px)`,
+  }
+
   return (
     <SceneContainer onClick={() => toggle(!dove)}>
       <Header isLanding={!dove} />
       <DivingLogo style={logoProps}>
         <Logo />
       </DivingLogo>
-      <WaterContainerForeground style={foregroundProps}>
+      <WaterContainerForeground {...bind()} style={foregroundProps}>
         <WaterForegroundContainer>
           <WaterDiv />
         </WaterForegroundContainer>

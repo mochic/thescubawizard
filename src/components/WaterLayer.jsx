@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import WaterSVG from '../images/water-darker-longer.svg'
 
 const CoverImage = styled.img`
-  height: 1179px;
-  width: 1370px;
+  height: 1000px;
+  width: 1000px;
   object-fit: cover;
   margin: 0;
   padding: 0;

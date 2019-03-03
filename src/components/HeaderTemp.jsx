@@ -2,64 +2,105 @@ import React, { Component } from 'react'
 
 import styled from 'styled-components'
 
-const Title = styled.div`
+import Contacter from '../components/Contacter'
+
+// const Title = styled.div`
+//   color: white;
+//   font-family: 'roboto';
+//   position: relative;
+//   height: 30%;
+//   width: 38%;
+//   font-size: 10vw;
+//   line-height: normal;
+//   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+//   @media (min-width: 312px) {
+//     font-size: 10vw;
+//   }
+
+//   @media (min-width: 375px) {
+//     font-size: 10vw;
+//   }
+// `
+
+// const LandingHeaderContainer = styled.div`
+//   color: white;
+//   font-family: 'roboto';
+//   height: 30%;
+//   font-size: 10vw;
+//   line-height: normal;
+//   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+//   width: 30vw;
+//   margin-left: 9vw;
+//   margin-top: 4vh;
+//   font-weight: bolder;
+
+//   @media (min-width: 312px) {
+//     font-size: 10vw;
+//   }
+
+//   @media (min-width: 375px) {
+//     font-size: 10vw;
+//   }
+// `
+
+const ContacterContainer = styled.div`
+  margin-top: 4px;
+`
+
+const LandingTitleHeading = styled.h1`
   color: white;
   font-family: 'roboto';
-  position: relative;
   height: 30%;
-  width: 38%;
   font-size: 10vw;
   line-height: normal;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-  @media (min-width: 312px) {
-    font-size: 10vw;
-  }
-
-  @media (min-width: 375px) {
-    font-size: 10vw;
-  }
+  width: 35vw;
+  font-weight: bolder;
 `
 
-const BaseHeader = () => {
+const TitleHeadingMajor = styled.h1`
+  color: white;
+  font-size: 24px;
+  margin-left: 5%;
+  font-weight: 300;
+`
+
+const TitleHeadingMinor = styled.h1`
+  color: white;
+  font-size: 24px;
+  font-weight: lighter;
+`
+
+const TitleHeadingContainer = styled.div`
+  display: flex;
+  width: 60%;
+`
+
+const LandingTitle = () => {
+  return <LandingTitleHeading>the scuba wizard</LandingTitleHeading>
+}
+
+const Title = () => {
   return (
-    <HeaderContainer>
-      <Title>the scuba wizard</Title>
-    </HeaderContainer>
+    <TitleHeadingContainer>
+      <TitleHeadingMinor>the</TitleHeadingMinor>
+      <TitleHeadingMajor>scuba wizard</TitleHeadingMajor>
+    </TitleHeadingContainer>
   )
 }
 
 const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   position: fixed;
   top: 0px;
   left: 0px;
-  width: 100%;
-`
-
-const LandingHeaderContainer = styled.div`
-  color: white;
-  font-family: 'roboto';
-  height: 30%;
-  font-size: 10vw;
-  line-height: normal;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  width: 30vw;
+  width: 84vw;
   margin-left: 9vw;
+  margin-right: 7vw;
   margin-top: 4vh;
-  font-weight: bolder;
-
-  @media (min-width: 312px) {
-    font-size: 10vw;
-  }
-
-  @media (min-width: 375px) {
-    font-size: 10vw;
-  }
 `
-
-const LandingHeader = () => {
-  return <LandingHeaderContainer>the scuba wizard</LandingHeaderContainer>
-}
 
 export default class Header extends Component {
   static defaultProps = {
@@ -69,7 +110,10 @@ export default class Header extends Component {
   render = () => {
     return (
       <HeaderContainer>
-        {this.props.isLanding ? <LandingHeader /> : <BaseHeader />}
+        {this.props.isLanding ? <LandingTitle /> : <Title />}
+        <ContacterContainer>
+          <Contacter />
+        </ContacterContainer>
       </HeaderContainer>
     )
   }

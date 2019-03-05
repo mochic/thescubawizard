@@ -4,6 +4,7 @@ import clamp from 'lodash-es/clamp'
 import styled, { keyframes } from 'styled-components'
 import { animated, config, useSpring } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
+import { add, scale } from 'vec-la'
 
 import WaterLayer from '../components/WaterLayer'
 
@@ -64,34 +65,6 @@ const WaterBackgroundContainer = styled(animated.div)`
   opacity: 0.8;
 `
 
-// const WaterForegroundContainer = styled(animated.div)`
-//   z-index: 0;
-//   position: absolute;
-//   width: 1370px;
-//   left: -350px;
-//   top: 70%;
-//   opacity: 0.8;
-// `
-
-// const WaterBackgroundContainer = styled(animated.div)`
-//   z-index: -2;
-//   position: absolute;
-//   width: 1370px;
-//   left: -350px;
-//   top: 46%;
-//   opacity: 0.8;
-// `
-
-// const WaterBackgroundContainer = styled(animated.div)`
-//   z-index: -2;
-//   position: absolute;
-//   width: 1370px;
-//   transform: translate3d(0, 0, 0);
-//   left: -350px;
-//   top: 46%;
-//   opacity: 0.8;
-// `
-
 const LogoSwell = keyframes`
   0%, 100% {
     transform: translate3d(0,15px,0);
@@ -150,49 +123,59 @@ const AboutPage = () => {
   const logoFloat = 15
   const logoDove = 24
 
-  //   const foregroundProps = useSpring({
-  //     top: dove ? '5%' : '60%',
-  //     config: config.molasses,
-  //   })
+  const [{ offsetY }, set] = useSpring(() => ({ offsetY: 0 }))
 
-  //   const backgroundProps = useSpring({
-  //     top: dove ? '3%' : '46%',
-  //     config: config.molasses,
-  //   })
+  //   const [
+  //     bind,
+  //     {
+  //       local: [x, y],
+  //     },
+  //   ] = useGesture()
 
-  //   const logoProps = useSpring({
-  //     top: dove ? '19%' : '18%',
-  //     config: config.wobbly,
-  //   })
+  const bind = useGesture(
+    ({ down, delta, velocity, direction, temp = offsetY.getValue() }) => {
+      console.log(delta, temp, direction, velocity)
+      set({
+        offsetY: delta[1] + temp,
+        immediate: down,
+        config: { velocity: scale(direction, velocity), decay: true },
+      })
+      return temp
+    }
+  )
+  // const diveThresold = window.innerHeight * 0.1
+  // const [{ diveOffsetY }, set] = useSpring(() => ({ diveOffsetY: 0 }))
 
-  // const [{ offsetY }, set] = useSpring(() => ({ offsetY: 0 }))
-  // based on https://codesandbox.io/embed/r24mzvo3q
-  //   const bind = useGesture(({ local }) => {
-  //     console.log('gesturing...', local)
-  //     set({
-  //       offsetY: local[1], // y of drag?
-  //     })
-  //   })
-  const [
-    bind,
-    {
-      local: [x, y],
-    },
-  ] = useGesture()
+  // const bind = useGesture(
+  //   ({ down, delta, velocity, direction, distance, cancel }) => {
+  //     if (down && distance > window.innerHeight / 5) {
+  //     }
+  //   }
+  // )
 
   // use interpolate to make it springy for the end animation?
   const logoProps = {
     top: `19%`,
   }
 
+  //   const foregroundProps = {
+  //     top: `60%`,
+  //     transform: `translateY(${offsetY.interpolate(y => y)}px)`,
+  //   }
+
   const foregroundProps = {
     top: `60%`,
-    transform: `translateY(${y}px)`,
+    transform: offsetY.interpolate(y => `translateY(${y}px)`),
   }
+
+  //   const backgroundProps = {
+  //     top: `46%`,
+  //     transform: `translateY(${offsetY.interpolate(y => y)}px)`,
+  //   }
 
   const backgroundProps = {
     top: `46%`,
-    transform: `translateY(${y}px)`,
+    transform: offsetY.interpolate(y => `translateY(${y}px)`),
   }
 
   return (

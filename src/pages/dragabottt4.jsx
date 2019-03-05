@@ -1,9 +1,10 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useRef } from 'react'
 
 import clamp from 'lodash-es/clamp'
 import styled, { keyframes } from 'styled-components'
-import { animated, config, useSpring } from 'react-spring'
+import { animated, config, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
+import { add, scale } from 'vec-la'
 
 import WaterLayer from '../components/WaterLayer'
 
@@ -64,34 +65,6 @@ const WaterBackgroundContainer = styled(animated.div)`
   opacity: 0.8;
 `
 
-// const WaterForegroundContainer = styled(animated.div)`
-//   z-index: 0;
-//   position: absolute;
-//   width: 1370px;
-//   left: -350px;
-//   top: 70%;
-//   opacity: 0.8;
-// `
-
-// const WaterBackgroundContainer = styled(animated.div)`
-//   z-index: -2;
-//   position: absolute;
-//   width: 1370px;
-//   left: -350px;
-//   top: 46%;
-//   opacity: 0.8;
-// `
-
-// const WaterBackgroundContainer = styled(animated.div)`
-//   z-index: -2;
-//   position: absolute;
-//   width: 1370px;
-//   transform: translate3d(0, 0, 0);
-//   left: -350px;
-//   top: 46%;
-//   opacity: 0.8;
-// `
-
 const LogoSwell = keyframes`
   0%, 100% {
     transform: translate3d(0,15px,0);
@@ -138,66 +111,60 @@ const ScrollerContainer = styled.div`
   width: 100%;
 `
 
+const getDiveState = (dove, yDir) => {
+  if (dove) {
+    return yDir < 0
+  } else {
+    return yDir > 0
+  }
+}
+
 const AboutPage = () => {
-  const [dove, toggle] = useState(false)
+  const diving = useRef(false)
+  const offsets = [[0, -1000], [0, -1000], [0, 5]]
 
-  const foregroundFloat = 60
-  const foregroundDove = 5
+  // foreground, background, logo
+  const [[foregroundSpring, backgroundSpring, logoSpring], set] = useSprings(
+    3,
+    () => ({ y: 0 })
+  )
 
-  const backgroundFloat = 46
-  const backgroundDove = 3
-
-  const logoFloat = 15
-  const logoDove = 24
-
-  //   const foregroundProps = useSpring({
-  //     top: dove ? '5%' : '60%',
-  //     config: config.molasses,
-  //   })
-
-  //   const backgroundProps = useSpring({
-  //     top: dove ? '3%' : '46%',
-  //     config: config.molasses,
-  //   })
-
-  //   const logoProps = useSpring({
-  //     top: dove ? '19%' : '18%',
-  //     config: config.wobbly,
-  //   })
-
-  // const [{ offsetY }, set] = useSpring(() => ({ offsetY: 0 }))
-  // based on https://codesandbox.io/embed/r24mzvo3q
-  //   const bind = useGesture(({ local }) => {
-  //     console.log('gesturing...', local)
-  //     set({
-  //       offsetY: local[1], // y of drag?
-  //     })
-  //   })
-  const [
-    bind,
-    {
-      local: [x, y],
-    },
-  ] = useGesture()
+  const bind = useGesture(
+    ({
+      delta: [xDelta, yDelta],
+      down,
+      direction: [xDir, yDir],
+      distance,
+      cancel,
+    }) => {
+      if (down && distance > window.innerHeight / 5) {
+        cancel((diving.current = diving ? yDir < 0 : yDir > 0))
+      }
+      set(i => {
+        return { y: down ? yDelta : offsets[i][diving.current ? 1 : 0] }
+      })
+    }
+  )
 
   // use interpolate to make it springy for the end animation?
-  const logoProps = {
-    top: `19%`,
+  const backgroundProps = {
+    top: `46%`,
+    transform: backgroundSpring.y.interpolate(y => `translateY(${y}px)`),
   }
 
   const foregroundProps = {
     top: `60%`,
-    transform: `translateY(${y}px)`,
+    transform: foregroundSpring.y.interpolate(y => `translateY(${y}px)`),
   }
 
-  const backgroundProps = {
-    top: `46%`,
-    transform: `translateY(${y}px)`,
+  const logoProps = {
+    top: `19%`,
+    transform: logoSpring.y.interpolate(y => `translateY(${y}px)`),
   }
 
   return (
-    <SceneContainer onClick={() => toggle(!dove)}>
-      <Header isLanding={!dove} />
+    <SceneContainer>
+      <Header isLanding={true} />
       <DivingLogo style={logoProps}>
         <Logo />
       </DivingLogo>

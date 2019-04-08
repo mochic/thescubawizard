@@ -144,8 +144,8 @@ const AboutPage = () => {
         cancel((diving.current = diving ? yDir < 0 : yDir > 0))
       }
       set(i => {
-          if (i == 3)
-        return { y: down ? yDelta : offsets[i][diving.current ? 1 : 0] }
+        if (i == 3)
+          return { y: down ? yDelta : offsets[i][diving.current ? 1 : 0] }
       })
     }
   )
@@ -165,8 +165,6 @@ const AboutPage = () => {
     top: `19%`,
     transform: logoSpring.y.interpolate(y => `translateY(${y}px)`),
   }
-
-  const 
 
   return (
     <SceneContainer style={{ height: `300vh`, overflow: `scroll` }}>

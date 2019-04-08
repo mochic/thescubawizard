@@ -8,6 +8,7 @@ const LayoutContainer = styled(animated.div)``
 
 export default class ScrollerLayout extends Component {
   constructor(props) {
+    super(props)
     this.state = {
       scrollTop: 0,
     }
@@ -20,6 +21,6 @@ export default class ScrollerLayout extends Component {
   }
 
   render = () => {
-    return <LayoutContainer onScroll={handleScroll}>wut</LayoutContainer>
+    return <LayoutContainer onScroll={this.handleScroll}>wut</LayoutContainer>
   }
 }

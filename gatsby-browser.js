@@ -5,6 +5,7 @@ import React from 'react'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 
 import Logo from './src/components/AlternateLogo'
+import { animated } from 'react-spring'
 
 // import Logo from './src/components/Logo'
 // import BackgroundImage from './src/components/BackgroundImage'
@@ -104,6 +105,16 @@ const LogoContainer = styled.div`
   margin-top: 22%;
   z-index: -1;
 `
+
+// const SliderLayoutContainer = styled(animated.div)``
+
+// const SliderLayout = ({onClick}) => {
+//   return
+// }
+
+const SliderStackLayout = styled(animated.div)``
+
+const SliderLayoutContainer = styled(animated.div)``
 
 export const replaceComponentRenderer = ({ props, ...other }) => (
   <>

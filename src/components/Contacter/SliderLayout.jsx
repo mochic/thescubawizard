@@ -110,30 +110,25 @@ const Container = styled(animated.div)`
 const SlidingLayout = ({ children }) => {
   const [slid, slide] = useState(false)
   const props = useSpring({
-    transform: slid ? `translate3d(0,0%,0)` : `translate3d(0,-90vh,0)`,
+    transform: slid ? `translate3d(0,-100vh,0)` : `translate3d(0,0,0)`,
   })
   return (
     <Container style={props}>
       <Slider
         onClick={() => {
-          console.log('clicked!')
-          console.log(slid)
           slide(!slid)
+          console.log('clicked!')
         }}
       >
         <FadeUpIconContainer>
           <MdExpandLess />
+          <MdExpandLess />
         </FadeUpIconContainer>
       </Slider>
       <LayoutContainer>{children}</LayoutContainer>
-      <Slider
-        onClick={() => {
-          console.log('clicked!')
-          console.log(slid)
-          slide(!slid)
-        }}
-      >
+      <Slider onClick={() => slide(!slid)}>
         <FadeDownIconContainer>
+          <MdExpandMore />
           <MdExpandMore />
         </FadeDownIconContainer>
       </Slider>

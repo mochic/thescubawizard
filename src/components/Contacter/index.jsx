@@ -1,6 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
+import { animated } from 'react-spring'
 
 import ContactInfo from './ContactInfoTemp'
 import Invitation from './Invitation'
@@ -72,12 +73,30 @@ const PHONE = {
 
 const EMAIL = `thescubawizard@gmail.com`
 
+const InvitationContainer = styled(animated.div)`
+  margin-left: 10px;
+  margin-top: 20px;
+`
+
+const ContactInfoContainer = styled(animated.div)`
+  display: flex;
+  flex-direction: column;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 20%;
+  margin-bottom: 20%;
+`
+
 export default () => {
   return (
     <MainContainer>
       <Container>
-        <Invitation invitationChunks={INVITATION} />
-        <ContactInfo phone={PHONE} email={EMAIL} />
+        <InvitationContainer>
+          <Invitation invitationChunks={INVITATION} />
+        </InvitationContainer>
+        <ContactInfoContainer>
+          <ContactInfo phone={PHONE} email={EMAIL} />
+        </ContactInfoContainer>
       </Container>
       <SliderLayout>
         <ContactFormPlaceholder>placeholder</ContactFormPlaceholder>

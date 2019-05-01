@@ -1,7 +1,13 @@
 import React, { useState, useRef } from 'react'
 
 import styled from 'styled-components'
-import { animated, useChain, useSpring, useTransition } from 'react-spring'
+import {
+  animated,
+  useChain,
+  useSpring,
+  useTransition,
+  config,
+} from 'react-spring'
 
 const InfoItemName = styled(animated.span)`
   overflow: hidden;
@@ -143,13 +149,58 @@ export default ({ phone, email }) => {
     leave: { opacity: 0, height: 0, innerHeight: 0 },
   })
 
+  const LABEL = [{ key: 'contact-info', text: 'contact' }]
+
+  const SlideInLabel = styled(animated.div)`
+    font-family: roboto;
+    font-size: 56px;
+    font-weight: thin;
+  `
+
+  const slideInTransitionRef = useRef()
+  const slideInTransition = useTransition(LABEL, null, {
+    ref: slideInTransitionRef,
+    from: { opacity: 0, transform: `translate3d(40px,0,0)` },
+    enter: { opacity: 1, transform: `translate3d(0px,0,0)` },
+    leave: { opacity: 0, transform: `translate3d(-40px,0,0)` },
+  })
+
+  const SCHEDULE = [
+    { key: `schedule-0`, text: `or` },
+    { key: `schedule-1`, text: `schedule a chat` },
+  ]
+
+  const ScheduleLabel = styled(animated.div)`
+    font-family: roboto;
+    color: white;
+    font-size: 36px;
+    font-weight: 400;
+    margin-bottom: 10px;
+  `
+
+  const slideInSchedulerRef = useRef()
+  const slideInSchedulerTransition = useTransition(SCHEDULE, item => item.key, {
+    ref: slideInSchedulerRef,
+    from: { opacity: 0, transform: `translate3d(0,40px,0)` },
+    enter: { opacity: 1, transform: `translate3d(0,0px,0)` },
+    leave: { opacity: 0 },
+    trail: 300,
+    // config: config.wobbly,
+  })
+
   //   useChain([labelSpringRef, dividerSpringRef, infoItemTransitionRef])
-  useChain([labelTransitionRef, dividerSpringRef, infoItemTransitionRef])
+  //   useChain([labelTransitionRef, dividerSpringRef, infoItemTransitionRef])
+  useChain([
+    slideInTransitionRef,
+    dividerSpringRef,
+    infoItemTransitionRef,
+    slideInSchedulerRef,
+  ])
 
   return (
     <>
       {/* <Label style={labelProps}>contact</Label> */}
-      <LabelContainer>
+      {/* <LabelContainer>
         {labelTransition.map(({ item, key, props }) => {
           return (
             <LabelChunk key={key} style={props}>
@@ -157,7 +208,14 @@ export default ({ phone, email }) => {
             </LabelChunk>
           )
         })}
-      </LabelContainer>
+      </LabelContainer> */}
+      {slideInTransition.map(({ item, key, props }) => {
+        return (
+          <SlideInLabel key={key} style={props}>
+            {item.text}
+          </SlideInLabel>
+        )
+      })}
       <Divider style={dividerProps} />
       {infoItemTransitions.map(
         ({ item, key, props: { innerHeight, ...rest } }) => {
@@ -173,6 +231,13 @@ export default ({ phone, email }) => {
           )
         }
       )}
+      {slideInSchedulerTransition.map(({ item, key, props }) => {
+        return (
+          <ScheduleLabel key={key} style={props}>
+            {item.text}
+          </ScheduleLabel>
+        )
+      })}
     </>
   )
 }

@@ -42,7 +42,7 @@ module.exports = {
           `b612 mono`,
           `roboto mono`,
           `anton`,
-          `roboto`,
+          `roboto\:100,400,600,900`,
         ],
       },
     },

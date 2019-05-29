@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import Contacter from '../components/Contacter'
 
 const PageContainer = styled.div`
-  height: 85vh;
+  height: 100vh;
   width: 100vw;
 `
 
@@ -19,6 +19,5 @@ export default () => (
     <PageContainer>
       <Contacter />
     </PageContainer>
-    <NavMenuContainer />
   </>
 )

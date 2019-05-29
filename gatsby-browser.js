@@ -19,7 +19,6 @@ import { animated } from 'react-spring'
 
 const GlobalStyle = createGlobalStyle`
     html, body {
-        background: #343434;
     }
     body {
         margin: 0;

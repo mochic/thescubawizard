@@ -11,6 +11,11 @@ const InvitationChunk = styled(animated.div)`
   line-height: 1;
 `
 
+const InvitationContainer = styled(animated.div)`
+  margin-left: 10px;
+  margin-top: 20px;
+`
+
 export default ({ item, props }) => {
   return <InvitationChunk style={props}>{item.text}</InvitationChunk>
 }

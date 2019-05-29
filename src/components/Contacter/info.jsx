@@ -7,6 +7,7 @@ const Header = styled(animated.div)`
   font-family: roboto;
   font-size: 56px;
   font-weight: thin;
+  line-height: 1;
 `
 
 const Divider = styled(animated.div)`
@@ -27,16 +28,21 @@ const InfoItemContainer = styled(animated.div)`
 const InfoItemLabel = styled(animated.span)`
   overflow: hidden;
   line-height: 80px;
+  color: white;
 `
 
-const InfoItemValue = styled(animated.span)``
+const InfoItemValue = styled(animated.span)`
+  color: white;
+`
 
 const InfoItemValueContainer = styled(animated.span)`
   line-height: 80px;
 `
 
 const Container = styled(animated.div)`
-  background: red;
+  margin-top: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
 `
 
 export default ({ headerSpring, dividerSpring, infoItemSprings }) => {

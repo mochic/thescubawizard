@@ -1,53 +1,68 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
+
 import styled from 'styled-components'
+import { animated, useSprings } from 'react-spring'
 
-const Title = styled.h1``
-
-const NameInput = styled.input``
-
-const EmailInput = styled.input``
-
-const DescriptionInput = styled.textarea``
-
-const SubmitInput = styled.input``
-
-const SubmittedMessage = styled.p``
-
-const ScheduleFormContainer = styled.form`
-  display: flex;
-  flex-direction: column;
+const Form = styled(animated.form)`
+  margin: 0px;
+  padding: 0px;
 `
 
-class ScheduleForm extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      submitted: false,
-    }
-  }
+const Input = styled(animated.input)``
 
-  handleSubmit = event => {
-    event.preventDefault()
-    this.setState({
-      submitted: true,
-    })
-  }
+const Switch = styled(animated.div)``
 
-  render = () => {
-    if (this.state.submitted) {
-      return <SubmittedMessage>Thanks man!</SubmittedMessage>
-    } else {
-      return (
-        <ScheduleFormContainer method="post" onSubmit={this.handleSubmit}>
-          <Title>schedule an appointment</Title>
-          <NameInput placeholder="name" type="text" />
-          <EmailInput placeholder="email" type="email" />
-          <DescriptionInput name="description" placeholder="description" />
-          <SubmitInput type="submit" value="submit" />
-        </ScheduleFormContainer>
-      )
+const Toggle = styled(animated.button)``
+
+const schedulingTypes = [
+  { key: `email`, name: `email`, type: `email` },
+  { key: `phone`, name: `phone`, type: `email` },
+]
+
+export default ({ submitForm }) => {
+  const [type, setScheduleType] = useState('email')
+
+  const springs = useSprings(
+    schedulingTypes,
+    schedulingType => schedulingType.key,
+    {
+      from: {
+        x: 0,
+        y: 0,
+      },
+      to: {},
     }
-  }
+  )
+
+  return (
+    <>
+      <Form>
+        <Switch>
+          <Toggle
+            onClick={e => {
+              e.preventDefault()
+              setScheduleType(`email`)
+            }}
+          />
+          <Toggle
+            o
+            nClick={e => {
+              e.preventDefault()
+              setScheduleType(`phone`)
+            }}
+          />
+        </Switch>
+        {springs.map(({ key, item, props }) => {
+          return <Input key={key} style={props} />
+        })}
+        <Input
+          type="submit"
+          onChange={e => {
+            e.preventDefault()
+            return submitForm()
+          }}
+        />
+      </Form>
+    </>
+  )
 }
-
-export default ScheduleForm

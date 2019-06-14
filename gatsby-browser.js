@@ -181,6 +181,8 @@ const NavigationHint = () => {
   )
 }
 
+// const
+
 export const replaceComponentRenderer = ({ props, ...other }) => (
   <>
     <GlobalStyle />

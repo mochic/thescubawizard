@@ -43,6 +43,7 @@ module.exports = {
           `roboto mono`,
           `anton`,
           `roboto\:100,400,600,900`,
+          `inconsolata\:100,300,400,600,900`,
         ],
       },
     },

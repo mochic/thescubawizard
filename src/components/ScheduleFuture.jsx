@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import styled from 'styled-components'
-import { animated, useSpring, useTransition } from 'react-spring'
+import { animated, useSpring, useTransition, useChain } from 'react-spring'
 
 const Gradient = styled(animated.div)`
   background: linear-gradient(
@@ -12,15 +12,22 @@ const Gradient = styled(animated.div)`
   z-index: 1;
   height: 100vh;
   width: 100vw;
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: absolute;
 `
+
+// const Background = styled(animated.div)`
+//   position: fixed;
+//   top: 100vh;
+//   left: 0;
+//   height: 100vh;
+//   width: 100vw;
+//   background: #2f2f2f;
+//   z-index: -4;
+// `
 
 const Container = styled(animated.div)`
   height: 100vh;
   width: 100vw;
-  background: blue;
   display: grid;
   grid-template-rows: repeat(24, 1fr);
   grid-template-columns: repeat(24, 1fr);
@@ -30,13 +37,13 @@ const SchedulerContainer = styled(animated.form)`
   display: grid;
   grid-template-rows: repeat(24, 1fr);
   grid-template-columns: repeat(24, 1fr);
-  grid-row-start: 15;
+  grid-row-start: 10;
   grid-row-end: 22;
-  grid-column-start: 3;
-  grid-column-end: 21;
+  grid-column: 3 / span 20;
   margin: 0;
   padding: 0;
   background: red;
+  font-family: roboto;
 `
 
 const TextToggle = styled(animated.button)`
@@ -45,28 +52,51 @@ const TextToggle = styled(animated.button)`
   border: none;
   font-family: roboto;
   font-weight: 300;
+  background: transparent;
+  font-size: 22px;
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
+`
+
+const TextDivider = styled(animated.div)`
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-family: roboto;
+  font-weight: 300;
+  font-size: 22px;
 `
 
 const Input = styled(animated.input)``
 
-const InputContainer = styled(animated.div)`
-  background: green;
-  grid-row-start: 14;
-  grid-column: 2 / span 20;
-`
-
-const Submit = styled(animated.input)`
-  grid-row-start: 20;
-  grid-column: span 10 / 20;
-`
-
-const TextSpan = styled(animated.span)``
-
 const Switch = styled(animated.div)`
   display: flex;
-  grid-column: 0 / span 24;
-  grid-row-start: 0;
   background: yellow;
+  align-items: center;
+  justify-content: space-evenly;
+`
+
+const InputContainer = styled(animated.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-row: 8 / 16;
+  grid-column: 2 / 24;
+  background: green;
+`
+
+const OnColorP = styled(animated.p)`
+  font-weight: 300;
+  font-family: roboto;
+  color: #f2f2f2;
+  font-size: 36px;
+  line-height: 1;
+`
+
+const HidingContainer = styled(animated.div)`
+  background: pink;
+  overflow: hidden;
 `
 
 const Scheduler = ({ handleSubmit }) => {
@@ -89,13 +119,30 @@ const Scheduler = ({ handleSubmit }) => {
   ]
 
   const inputTransitions = useTransition(scheduleTypes, item => item.key, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
+    from: { transform: `translate3d(0,-40px,0)`, opacity: 0 },
+    enter: { transform: `translate3d(0,0px,0)`, opacity: 1 },
+    leave: { transform: `translate(0,40px,0)`, opacity: 0 },
+  })
+
+  const questionProps = useSpring({
+    to: {
+      transform: scheduleType
+        ? `translate3d(0,-40px,0)`
+        : `translate3d(0,0px,0)`,
+      opacity: scheduleType ? 0 : 1,
+    },
   })
 
   return (
     <SchedulerContainer>
-      <Switch>
+      <HidingContainer
+        style={{ gridArea: `2 / 2 / 8 / 24`, overflow: `hidden` }}
+      >
+        <OnColorP style={questionProps}>
+          How should I get a hold of you?
+        </OnColorP>
+      </HidingContainer>
+      <Switch style={{ gridArea: `8 / 2 / 13 / 24` }}>
         <TextToggle
           onClick={e => {
             e.preventDefault()
@@ -104,7 +151,7 @@ const Scheduler = ({ handleSubmit }) => {
         >
           phone
         </TextToggle>
-        <TextSpan>or</TextSpan>
+        <TextDivider>or</TextDivider>
         <TextToggle
           onClick={e => {
             e.preventDefault()
@@ -114,7 +161,7 @@ const Scheduler = ({ handleSubmit }) => {
           email
         </TextToggle>
       </Switch>
-      <InputContainer>
+      <InputContainer style={{ gridArea: `14 / 2 / 18 / 24` }}>
         {inputTransitions.map(({ key, item, props }) => {
           console.log(key, item, props)
           return (
@@ -124,18 +171,24 @@ const Scheduler = ({ handleSubmit }) => {
           )
         })}
       </InputContainer>
-      <Submit
-        type="submit"
-        onChange={e => {
-          e.preventDefault()
-          return handleSubmit(e)
-        }}
-      />
+      {scheduleType && (
+        <Input
+          value="submit"
+          type="submit"
+          style={{
+            gridArea: `19 / 16 / 22 / 24`,
+          }}
+          onChange={e => {
+            e.preventDefault()
+            return handleSubmit(e)
+          }}
+        />
+      )}
     </SchedulerContainer>
   )
 }
 
-const ScheduleHeader = styled(animated.div)`
+const ScheduleHeader = styled(animated.h2)`
   font-weight: 300;
   font-family: roboto;
   color: #f2f2f2;
@@ -145,28 +198,6 @@ const ScheduleHeader = styled(animated.div)`
   grid-row-start: 3;
   text-align: right;
   width: 100%;
-`
-
-const ScheduleStatement = styled(animated.div)`
-  font-weight: 300;
-  font-family: roboto;
-  color: #f2f2f2;
-  font-size: 36px;
-  grid-row-start: 2;
-  line-height: 1;
-  grid-column: 3 / span 20;
-  grid-row-start: 10;
-`
-
-const ScheduleQuestion = styled(animated.div)`
-  font-weight: 300;
-  font-family: roboto;
-  color: #f2f2f2;
-  font-size: 36px;
-  grid-row-start: 3;
-  line-height: 1;
-  grid-column: 3 / span 20;
-  grid-row-start: 14;
 `
 
 export default ({
@@ -179,15 +210,13 @@ export default ({
     <>
       <Container>
         <ScheduleHeader>schedule a chat.</ScheduleHeader>
-        <ScheduleStatement>
+        <OnColorP style={{ gridColumn: `3 / span 20`, gridRow: `7 / auto` }}>
           Let's talk about that next dive job.
-        </ScheduleStatement>
-        <ScheduleQuestion>
-          How would you like me to get back to you?
-        </ScheduleQuestion>
+        </OnColorP>
         <Scheduler style={{ transform: schedulerTransform }} />
+        <Gradient />
       </Container>
-      {/* <Gradient /> */}
+      {/* <Background /> */}
     </>
   )
 }

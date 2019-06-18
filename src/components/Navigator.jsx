@@ -1,48 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 
-// import navigate from 'gatsby'
-// import posed, { PoseGroup } from 'react-pose'
-import styled, {
-  createGlobalStyle,
-  keyframes,
-  ThemeProvider,
-} from 'styled-components'
-
-import Logo from './src/components/AlternateLogo'
+import styled from 'styled-components'
 import { animated, useSpring, useTransition, config } from 'react-spring'
 
 import { FaChevronDown } from 'react-icons/fa'
 
-const GlobalStyle = createGlobalStyle`
-    html, body {
-    }
-    body {
-        margin: 0;
-        padding: 0;
-    }
-`
-
-const LogoContainer = styled.div`
-  height: 170%;
-  width: 170%;
-  position: fixed;
-  margin-left: 22.2%;
-  margin-top: 22%;
-  z-index: -1;
-`
-
-const SliderStackLayout = styled(animated.div)``
-
-const SliderLayoutContainer = styled(animated.div)``
-
-const FadeDownKeys = keyframes`
-    from {
-        opacity: 1;
-        transform: translate3d(0,-16px,0);
-    } to {
-        opacity: 0;
-        transform: translate3d(0,0px,0);
-    }
+const CenteringContainr = styled(animated.div)`
+  background: red;
+  text-align: center;
 `
 
 const ScheduleHintContainer = styled(animated.div)`
@@ -95,15 +60,6 @@ const NavigationHint = () => {
   )
 }
 
-// const
-
-export const replaceComponentRenderer = ({ props, ...other }) => (
-  <>
-    <GlobalStyle />
-    {/* <LogoContainer>
-      <Logo />
-    </LogoContainer> */}
-    {React.createElement(props.pageResources.component, props)}
-    {/* <NavigationHint /> */}
-  </>
-)
+export default ({ currentRoute, nextRoute }) => {
+  return <NavigationHint />
+}

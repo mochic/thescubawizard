@@ -7,7 +7,7 @@ import debounce from 'lodash/debounce'
 
 import VisibilitySensor from 'react-visibility-sensor'
 import Logo from '../components/Logo'
-import SchedulePage from '../components/ScheduleFinal'
+import SchedulePage from '../components/ScheduleFinal4'
 import Navigator from '../components/Navigator'
 
 // short landing page for quick switch trick?
@@ -105,6 +105,12 @@ const LandingLogo = ({ percent }) => {
   )
 }
 
+const SchedulePageContainr = styled(animated.div)`
+  height: 100vh;
+  widht: 100vw;
+  background: #2f2f2f;
+`
+
 const MainContainr = styled(animated.div)`
   position: absolute;
   height: 150vh;
@@ -149,7 +155,11 @@ export default () => {
       <LandingPage>
         {/* <LandingLogo percent={windowsRevealed} /> */}
       </LandingPage>
-      <SchedulePage show={windowsRevealed >= 0.5} />
+      <SchedulePageContainr>
+        {windowsRevealed >= 0.5 && (
+          <SchedulePage show={windowsRevealed >= 0.5} />
+        )}
+      </SchedulePageContainr>
       <Navigator />
       {/* <MainContainr /> */}
     </>

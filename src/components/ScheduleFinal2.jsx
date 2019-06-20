@@ -1,6 +1,12 @@
 import React, { useRef, useState } from 'react'
 
-import { animated, useSpring, useTransition } from 'react-spring'
+import {
+  animated,
+  useSpring,
+  useTransition,
+  useChain,
+  config,
+} from 'react-spring'
 import styled from 'styled-components'
 
 const handleSubmitPlaceholder = e => {
@@ -104,9 +110,23 @@ const OtherHidingContainr = styled(animated.div)`
   overflow: hidden;
 `
 
-const Scheduler = ({ handleSubmit, style }) => {
-  const [scheduleType, setScheduleType] = useState(null)
+const SchedulerContext = React.createContext({})
 
+const Scheduler = ({
+  questionProps,
+  switchProps,
+  submitProps,
+  phoneToggleProps,
+  emailToggleProps,
+  textDividerProps,
+  phoneInputProps,
+  emailInputProps,
+  handleSwitch,
+  handleSubmit,
+  handlePhoneChange,
+  handleEmailChange,
+  style,
+}) => {
   const phoneRef = useRef(null)
   const emailRef = useRef(null)
 
@@ -116,52 +136,6 @@ const Scheduler = ({ handleSubmit, style }) => {
       email: emailRef.current.value,
     }
   }
-
-  const scheduleTypes = [
-    {
-      key: `email-input`,
-      type: `email`,
-      placeholder: `email address`,
-      autoComplete: `email`,
-    },
-    {
-      key: `phone-input`,
-      type: `tel`,
-      name: `phone`,
-      placeholder: `phone number`,
-      autoComplete: `tel`,
-    },
-  ]
-
-  const { pTransform, pOpacity, eOpacity, eTransform } = useSpring({
-    to: {
-      pTransform:
-        scheduleType === `phone-input`
-          ? `translate3d(40px,0,0)`
-          : `translate3d(0px,0,0)`,
-      eTransform:
-        scheduleType === `email-input`
-          ? `translate3d(40px,0,0,)`
-          : `translate3d(0px,0,0)`,
-      pOpacity: scheduleType === `phone-input` ? 1 : 0,
-      eOpacity: scheduleType === `email-input` ? 1 : 0,
-    },
-  })
-
-  const inputTransitions = useTransition(scheduleTypes, item => item.key, {
-    from: { transform: `translate3d(0,-40px,0)`, opacity: 0 },
-    enter: { transform: `translate3d(0,0px,0)`, opacity: 1 },
-    leave: { transform: `translate(0,40px,0)`, opacity: 0 },
-  })
-
-  const questionProps = useSpring({
-    to: {
-      transform: scheduleType
-        ? `translate3d(0,-40px,0)`
-        : `translate3d(0,0px,0)`,
-      opacity: scheduleType ? 0 : 1,
-    },
-  })
 
   return (
     <SchedulerContainer
@@ -173,7 +147,7 @@ const Scheduler = ({ handleSubmit, style }) => {
       style={style}
     >
       <HidingContainer
-        style={{ gridArea: `2 / 2 / 8 / 24`, overflow: `hidden` }}
+        style={{ gridArea: `2 / 1 / 8 / 25`, overflow: `hidden` }}
       >
         <OnColorP style={questionProps}>
           How should I get a hold of you?
@@ -183,30 +157,33 @@ const Scheduler = ({ handleSubmit, style }) => {
         <TextToggle
           onClick={e => {
             e.preventDefault()
-            setScheduleType(`phone-input`)
+            handleSwitch(`phone`)
           }}
+          style={phoneToggleProps}
         >
           phone
         </TextToggle>
-        <TextDivider>or</TextDivider>
+        <TextDivider style={textDividerProps}>or</TextDivider>
         <TextToggle
           onClick={e => {
             e.preventDefault()
-            setScheduleType(`email-input`)
+            handleSwitch(`email`)
           }}
+          style={emailToggleProps}
         >
           email
         </TextToggle>
       </Switch>
-      <InputContainer style={{ gridArea: `14 / 2 / 18 / 24` }}>
+      <InputContainer style={{ gridArea: `14 / 1 / 18 / 25` }}>
         <Input
           key="phone-input"
           type="tel"
           name="phone"
           placeholder="phone number"
           autoComplete="tel"
-          style={{ transform: pTransform, opacity: pOpacity }}
+          style={phoneInputProps}
           ref={phoneRef}
+          onChange={handlePhoneChange}
         />
         <Input
           key="email-input"
@@ -214,8 +191,9 @@ const Scheduler = ({ handleSubmit, style }) => {
           name="email"
           placeholder="email address"
           autoComplete="email"
-          style={{ transform: eTransform, opacity: eOpacity }}
+          style={emailInputProps}
           ref={emailRef}
+          onChange={handleEmailChange}
         />
       </InputContainer>
       <Input
@@ -223,13 +201,18 @@ const Scheduler = ({ handleSubmit, style }) => {
         type="submit"
         style={{
           gridArea: `19 / 16 / 22 / 24`,
+          ...submitProps,
         }}
       />
     </SchedulerContainer>
   )
 }
 
+// we reveal...maybe render for first to make it as efficient as possible...
 export default ({ show }) => {
+  const [inputType, setInputType] = useState(null)
+  const [inputState, setInputState] = useState({})
+
   const { h2Transform, pTransform, h2Opacity, pOpacity } = useSpring({
     from: {
       h2Transform: `translate3d(0,40px,0)`,
@@ -244,6 +227,75 @@ export default ({ show }) => {
       pOpacity: show ? 1 : 0,
     },
   })
+
+  const questionProps = useSpring({
+    to: {
+      transform: show ? `translate3d(0px,0,0)` : `translate3d(-80px,0,0)`,
+      opacity: show ? 1 : 0,
+    },
+  })
+
+  const phoneToggleRef = useRef()
+  const phoneToggleProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: `translate3d(0,20px,0)`,
+    },
+    to: {
+      opacity: 1,
+      transform: `translate3d(0,0px,0)`,
+    },
+    // config: { ...config.wobbly, duration: 5000 },
+    ref: phoneToggleRef,
+  })
+
+  const textDividerRef = useRef()
+  const textDividerProps = useSpring({
+    from: { opacity: 0 },
+    to: {
+      opacity: 1,
+    },
+    // config: { ...config.stiff, duration: 500 },
+    ref: textDividerRef,
+  })
+
+  const emailToggleRef = useRef()
+  const emailToggleProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: `translate3d(0,20px,0)`,
+    },
+    to: {
+      opacity: 1,
+      transform: `translate3d(0,0px,0)`,
+    },
+    // config: { ...config.wobbly, duration: 500 },
+    ref: emailToggleRef,
+  })
+
+  useChain([phoneToggleRef, textDividerRef, emailToggleRef])
+
+  const submitSpringRef = useRef()
+  const submitProps = useSpring({
+    to: { opacity: inputState.phone || inputState.email ? 1 : 0 },
+    ref: submitSpringRef,
+  })
+
+  const handlePhoneChange = ({ target }) => {
+    console.log(target)
+    setInputState({
+      ...inputState,
+      phone: target && target.value,
+    })
+  }
+
+  const handleEmailChange = ({ target }) => {
+    console.log(target)
+    setInputState({
+      ...inputState,
+      email: target && target.value,
+    })
+  }
 
   return (
     <Page>
@@ -265,10 +317,20 @@ export default ({ show }) => {
       >
         Let's talk about that next dive job.
       </OnColorP>
-      <Scheduler
-        style={{ gridArea: `11 / 3 / 22 / span 20` }}
-        handleSubmit={handleSubmitPlaceholder}
-      />
+      {show && (
+        <Scheduler
+          questionProps={questionProps}
+          phoneToggleProps={phoneToggleProps}
+          emailToggleProps={emailToggleProps}
+          textDividerProps={textDividerProps}
+          submitProps={submitProps}
+          style={{ gridArea: `11 / 3 / 22 / span 20` }}
+          handleSubmit={handleSubmitPlaceholder}
+          handleSwitch={setInputType}
+          handlePhoneChange={handlePhoneChange}
+          handleEmailChange={handleEmailChange}
+        />
+      )}
     </Page>
   )
 }
